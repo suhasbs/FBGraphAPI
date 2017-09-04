@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Information</title>
+</head>
+<body>
+<img src="{{ myinfo.picture.data.url }}" height="200" width="200"><br>
+	<ul>
+	<li>Name: {{ myinfo.name }}</li>
+	<br><li>Email: {{ myinfo.email }}</li>
+	<br><li>Birthday: {{ myinfo.birthday }}</li>
+	<br><li>Gender: {{ myinfo.gender }}</li>
+	
+	<!-- {% for info in myinfo %}
+		{{ info.name }} 
+
+	{% endfor %} -->
+	<a href="{% url 'graphapi:photo_ids' %}"><button>Get Photo IDs</button></a>
+
+
+</body>
+</html>

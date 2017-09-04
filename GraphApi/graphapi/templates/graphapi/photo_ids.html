@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Photo Ids</title>
+</head>
+<body>
+	<ul>
+	{% for photo in up_photos %}
+	<li>{{ photo.id }} ------ {{ photo.album.name }}</li>
+	{% endfor %}
+	
+	{% for photo in tag_photos %}
+	<li>{{ photo.id }} ----- None  </li>
+	{% endfor %}
+	</ul>
+
+</body>
+</html>

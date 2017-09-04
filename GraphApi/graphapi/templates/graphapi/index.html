@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>FB Graph Api</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<body>
+<p id='status'></p>	
+<img id='pict' height="200" width="200">
+
+<script>
+  var accessToken;
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '733805133473503',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v2.10'
+    });
+    FB.AppEvents.logPageView();
+    FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+  	testAPI();
+    
+    console.log('Logged in.');
+    //console.log(JSON.stringify(response.authResponse));
+    console.log(response.authResponse.accessToken)
+    accessToken = response.authResponse.accessToken;
+    sendToken();
+    //alert("Logged in")
+  }
+  else {
+    //FB.login();
+    FB.login(function(response) {
+  // handle the response
+  testAPI();
+  accessToken = response.authResponse.accessToken;
+  sendToken();
+}, {scope: 'user_friends, user_birthday, user_photos'});
+  }
+
+});
+
+
+    
+
+  };
+
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+function testAPI() {
+	FB.login(function(response) {
+
+    
+        console.log(JSON.stringify( response));
+		// FB.api('/search?q=suhasbelligundu&type=user&fields=name', function(response){
+      FB.api('/me',function(response){
+        document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+
+      console.log(response);
+
+      });
+
+    FB.api('/me/albums?fields=id,name', function(response){
+
+      console.log(JSON.stringify(response));
+
+    });
+    FB.api('/409503739245206?fields=album, link', function(response){
+
+      console.log(JSON.stringify(response));
+
+    });
+
+  // handle the response
+}, {scope: 'user_friends, user_birthday, publish_actions,public_profile, user_photos' });
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me/picture', function(response) {
+      console.log('Successful login for: ' + JSON.stringify(response));
+      document.getElementById('pict').src = response.data.url
+      
+    });
+
+    //alert("Hi");
+   
+
+
+    //alert("Hi")
+    // FB.api(
+    	
+    // 	"/me", 
+    // 	function (response) {
+    //   if (response && !response.error) {
+    //     /* handle the result */
+    //     console.log(JSON.stringify(response))
+    //   }
+    
+    // });
+  }
+
+  function sendToken() {
+
+     $.ajax({
+      url: '/graphapi/get_access_token/',
+      type: 'POST',
+      dataType: "json",
+      data: {
+
+        'access_token': accessToken
+      } ,   
+      success: function(json)
+      {
+        console.log("Sent Successfully");
+      }
+
+     }) 
+    // body...
+  }
+
+</script>
+
+
+	<!-- <div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div> -->
+  
+  <br>
+  <a href="{% url 'graphapi:myinfo' %}"><button>Get My Info</button></a>
+  <br><br><br>
+  <form action="{% url 'graphapi:search' %}" method="GET">
+  Enter name to search <input type='text' name='name'>
+  <input type="submit" name="submit" value="Search">
+  </form>
+</body>
+</html>
